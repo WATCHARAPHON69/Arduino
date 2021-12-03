@@ -24,12 +24,14 @@ int analogin, Mode, humset, i, j, TIME_CHECK, TIME_RUN, TIME;
 int analogpin = 15;
 bool Status;
 float HUM, TEMP;
+int pin = 23;
 void setup()
 {
   // Debug console
   Serial.begin(115200);
   dht.begin();
   pinMode(analogpin, INPUT);
+  pinMode(pin, INPUT);
   //Blynk.begin(auth, ssid, pass);
   // You can also specify server:
   Blynk.begin(auth, ssid, pass, "oasiskit.com", 8080);
@@ -45,7 +47,7 @@ void loop()
     last_time = millis(); //เซฟเวลาปัจจุบันไว้เพื่อรอจนกว่า millis() จะมากกว่าตัวมันเท่า period
     TIME++;
   }
-  if (Mode == 1) {
+  if (Mode == 1 || digitalRead(pin) == 1) {
     if (j == 0) {
       if (i >= 1) {
         i = -1;
@@ -65,47 +67,46 @@ void loop()
   TEMP = dht.readTemperature();
 
 
-\*
-  Serial.print("  Relay1 : ");
-  Serial.print(Relay1);
-  Serial.print("  Relay2 : ");
-  Serial.print(Relay2);
-  Serial.print("  Relay3 : ");
-  Serial.print(Relay3);
-  Serial.print("  Relay4 : ");
-  Serial.print(Relay4);
-  Serial.print(" SET_TEMP : ");
-  Serial.print(tempset);
-  Serial.print(" SET_ANALOG : ");
-  Serial.print(analogset);
-  Serial.print(" TEMP : ");
-  Serial.print(TEMP);
-  Serial.print(" *C ");
-  Serial.print(" HUM : ");
-  Serial.print(HUM);
-  Serial.print(" % ");
-  Serial.print(" ANALOG_IN : ");
-  Serial.print(analogin);
-  Serial.print(" SET_HUM : ");
-  Serial.print(humset);
-  Serial.print(" MODE : ");
-  Serial.print(Mode);
-  Serial.print(" i : ");
-  Serial.print(i);
-  Serial.print(" TIME_CHECK : ");
-  Serial.print(TIME_CHECK);
-  Serial.print(" TIME_RUN : ");
-  Serial.print(TIME_RUN);
-  Serial.print(" Status : ");
-  Serial.print(Status);
-  Serial.print(" TIME_CHECK : ");
-  Serial.print(TIME_CHECK);
-  Serial.print(" TIME_RUN : ");
-  Serial.print(TIME_RUN);
-  Serial.print(" TIME : ");
-  Serial.println(TIME);
-*/
-  
+  /*
+    Serial.print("  Relay1 : ");
+    Serial.print(Relay1);
+    Serial.print("  Relay2 : ");
+    Serial.print(Relay2);
+    Serial.print("  Relay3 : ");
+    Serial.print(Relay3);
+    Serial.print("  Relay4 : ");
+    Serial.print(Relay4);
+    Serial.print(" SET_TEMP : ");
+    Serial.print(tempset);
+    Serial.print(" SET_ANALOG : ");
+    Serial.print(analogset);
+    Serial.print(" TEMP : ");
+    Serial.print(TEMP);
+    Serial.print(" *C ");
+    Serial.print(" HUM : ");
+    Serial.print(HUM);
+    Serial.print(" % ");
+    Serial.print(" ANALOG_IN : ");
+    Serial.print(analogin);
+    Serial.print(" SET_HUM : ");
+    Serial.print(humset);
+    Serial.print(" MODE : ");
+    Serial.print(Mode);
+    Serial.print(" i : ");
+    Serial.print(i);
+    Serial.print(" TIME_CHECK : ");
+    Serial.print(TIME_CHECK);
+    Serial.print(" TIME_RUN : ");
+    Serial.print(TIME_RUN);
+    Serial.print(" Status : ");
+    Serial.print(Status);
+    Serial.print(" TIME_CHECK : ");
+    Serial.print(TIME_CHECK);
+    Serial.print(" TIME_RUN : ");
+    Serial.print(TIME_RUN);
+    Serial.print(" TIME : ");
+    Serial.println(TIME);
+  */
   Blynk.virtualWrite(V7, analogin);
   Blynk.virtualWrite(V8, TEMP);
   Blynk.virtualWrite(V9, HUM);
@@ -134,10 +135,18 @@ void RUN() {
       }
       if (analogin >= analogset) {
         IO(25, 1);
+        IO(33, 1);
+        IO(32, 1);
         BLYNK_V_WRITE(V2, 1);
+        BLYNK_V_WRITE(V3, 1);
+        BLYNK_V_WRITE(V4, 1);
       } else {
         IO(25, 0);
+        IO(33, 0);
+        IO(32, 0);
         BLYNK_V_WRITE(V2, 0);
+        BLYNK_V_WRITE(V3, 0);
+        BLYNK_V_WRITE(V4, 0);
       }
       //digitalWrite(33, Relay3);
       //digitalWrite(32, Relay4);
