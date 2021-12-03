@@ -65,7 +65,7 @@ void loop()
   TEMP = dht.readTemperature();
 
 
-
+\*
   Serial.print("  Relay1 : ");
   Serial.print(Relay1);
   Serial.print("  Relay2 : ");
@@ -104,7 +104,8 @@ void loop()
   Serial.print(TIME_RUN);
   Serial.print(" TIME : ");
   Serial.println(TIME);
-
+*/
+  
   Blynk.virtualWrite(V7, analogin);
   Blynk.virtualWrite(V8, TEMP);
   Blynk.virtualWrite(V9, HUM);
