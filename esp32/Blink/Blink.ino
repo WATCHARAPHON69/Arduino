@@ -42,12 +42,12 @@ void loop()
 {
   Blynk.run();
   timer.run();
-
+  //Serial.println(digitalRead(pin));
   if ( millis() - last_time > period) {
     last_time = millis(); //เซฟเวลาปัจจุบันไว้เพื่อรอจนกว่า millis() จะมากกว่าตัวมันเท่า period
     TIME++;
   }
-  if (Mode == 1 || digitalRead(pin) == 1) {
+  if (Mode == 1 || digitalRead(pin) ==1) {
     if (j == 0) {
       if (i >= 1) {
         i = -1;
