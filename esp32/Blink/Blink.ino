@@ -24,7 +24,7 @@ int analogin, Mode, humset, i, j, TIME_CHECK, TIME_RUN, TIME;
 int analogpin = 15;
 bool Status;
 float HUM, TEMP;
-int pin = 23;
+int pin = 21;
 void setup()
 {
   // Debug console
