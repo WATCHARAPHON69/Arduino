@@ -21,9 +21,12 @@ char ssid[] = "FILM69";
 char pass[] = "00000000";
 int Relay1, Relay2, Relay3, Relay4, tempset, analogset;
 int analogin, Mode, humset, i, j, TIME_CHECK, TIME_RUN, TIME;
-int analogpin = 15;
+int analogpin = 15, man_fan = 13, man_pump = 12, man_soli1 = 14, man_soli2 = 27;
+int BT;
+int x = 0;
 bool Status;
 float HUM, TEMP;
+int B[] = {0, 0, 0, 0};
 int pin = 21;
 void setup()
 {
@@ -31,7 +34,12 @@ void setup()
   Serial.begin(115200);
   dht.begin();
   pinMode(analogpin, INPUT);
-  pinMode(pin, INPUT);
+  pinMode(pin, INPUT_PULLUP);
+  pinMode(man_fan, INPUT_PULLUP);
+  pinMode(man_pump, INPUT_PULLUP);
+  pinMode(man_soli1, INPUT_PULLUP);
+  pinMode(man_soli2, INPUT_PULLUP);
+
   //Blynk.begin(auth, ssid, pass);
   // You can also specify server:
   Blynk.begin(auth, ssid, pass, "oasiskit.com", 8080);
@@ -47,7 +55,7 @@ void loop()
     last_time = millis(); //เซฟเวลาปัจจุบันไว้เพื่อรอจนกว่า millis() จะมากกว่าตัวมันเท่า period
     TIME++;
   }
-  if (Mode == 1 || digitalRead(pin) ==1) {
+  if (Mode == 1 || digitalRead(pin) == 0) {
     if (j == 0) {
       if (i >= 1) {
         i = -1;
@@ -59,6 +67,11 @@ void loop()
   else {
     j = 0;
   }
+
+  Serial.print(SW(12,0));
+  Serial.print(" # ");
+  Serial.println(SW(13,1));
+
 
   RUN();
 
@@ -193,4 +206,22 @@ BLYNK_WRITE(V12) {
 }
 BLYNK_WRITE(V13) {
   TIME_RUN = param.asInt();
+}
+
+int SW(int pin, int arr) {
+  //pinMode(pin, INPUT_PULLUP);
+
+  if (digitalRead(pin) == 0) {
+    if (BT == 1) {
+      if (B[arr] >= 1) {
+        B[arr] = -1;
+      }
+      B[arr]++;
+    }
+    BT++;
+  }
+  else {
+    BT = 0;
+  }
+  return B[arr];
 }
